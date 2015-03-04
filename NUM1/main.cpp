@@ -32,6 +32,22 @@ template<class F>void bisekcja(double start, double end, F funk, double epsilon)
     }
 }
 
+template<class F> double siecznych(F funk, double a, double b, double eps){
+    double x0;
+    x0 = a - funk(a) * (a - b) / (funk(a) - funk(b));
+
+    if (fabs(funk(x0)) < eps){
+        cout << x0 << endl;
+        cout << funk(x0) << endl;
+        return x0;
+    }
+    else{
+        cout << x0 << endl;
+        cout << funk(x0) << endl;
+        return siecznych(funk, x0, a, eps);
+    }
+}
+
 int main()
 {
     cout << "Hello World!" << endl;
@@ -39,6 +55,9 @@ int main()
     auto exponent = [](double x) -> double {return power(2,x);};
     auto wiel = [](double x) -> double {return wielomian(2,3,2,1,x);};
     bisekcja(-1,1.1,sinus,0.001);
+    cout << endl << endl;
+    double a = 2;
+    siecznych([a](double x)->double {return power(a, x);}, 2, 6, 0.2);
     /*for(list<double>::iterator it = rozwiazania.begin(); it != rozwiazania.end(); it++){
         cout << *it << endl;
     }*/
