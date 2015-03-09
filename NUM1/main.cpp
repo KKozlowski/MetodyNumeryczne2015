@@ -34,18 +34,20 @@ template<class F>void bisekcja(double start, double end, F funk, double epsilon)
 
 template<class F> double siecznych(F funk, double a, double b, double eps){
     double x0;
+    double x00;
     x0 = a - funk(a) * (a - b) / (funk(a) - funk(b));
-
+    if (x0 != x0){cout << "blad sieczna pionowa, najblizsza wartosc " << x00 << endl; return 0;}
     if (fabs(funk(x0)) < eps){
-        cout << x0 << endl;
-        cout << funk(x0) << endl;
+        //cout << x0 << endl;
+        //cout << funk(x0) << endl;
         return x0;
     }
     else{
-        cout << x0 << endl;
-        cout << funk(x0) << endl;
+        //cout << x0 << endl;
+        //cout << funk(x0) << endl;
         return siecznych(funk, x0, a, eps);
     }
+    x00=x0;
 }
 
 int main()
@@ -57,7 +59,7 @@ int main()
     bisekcja(-1,1.1,sinus,0.001);
     cout << endl << endl;
     double a = 2;
-    siecznych([a](double x)->double {return power(a, x);}, 2, 6, 0.2);
+    cout << siecznych([a](double x)->double {return power(a, x);}, 2, 6, 0.2);
     /*for(list<double>::iterator it = rozwiazania.begin(); it != rozwiazania.end(); it++){
         cout << *it << endl;
     }*/
