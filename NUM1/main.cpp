@@ -15,7 +15,14 @@ double power(double base, double exp){
     return pow(base, exp);
 }
 
-double wielomian(double a, double b, double c, double d, double x){
+double horner(double wsp[],int st, double x)
+{
+  if(st==0){
+    return wsp[0];}
+  return x*horner(wsp,st-1,x)+wsp[st];
+}
+
+double wielomianprosty(double a, double b, double c, double d, double x){
     return a*x*x*x -b*x*x +c*x -d;
 }
 
@@ -80,11 +87,14 @@ void drawPreview(){
 
 }
 
+double *wspolczynniki;
+int stopien;
+
 int main()
 {
     Gnuplot::set_GNUPlotPath( GNUPLOT_PATH );
 
-    cout << "Wybierz funkcje: \n1. Sinus\n2. Wykladnicza\n3. Wielomian\n> ";
+    cout << "Wybierz funkcje: \n1. Sinus\n2. Wykladnicza\n3. Wielomian \n4. Wielomian przykladowy \n> ";
     int wybor;
     double (*funk)(double);
     cin >> wybor;
@@ -97,7 +107,19 @@ int main()
         funk=[](double x) -> double {return power(2,x);};
         break;
     case 3:
-        funk=[](double x) -> double {return wielomian(2,3,2,1.05,x);};
+        cout<<"Podaj stopien wielomianu: ";
+        cin>>stopien;
+        wspolczynniki = new double [stopien+1];
+        //wczytanie wspolczynnikow
+        for(int i=0;i<=stopien;i++)
+        {
+          cout<<"Podaj wspolczynnik stojacy przy potedze "<<stopien-i<<": ";
+          cin>>wspolczynniki[i];
+        }
+        funk=[](double x) -> double {return horner(wspolczynniki,stopien,x);};
+        break;
+    case 4:
+        funk=[](double x) -> double {return wielomianprosty(2,3,2,1.05,x);};
         break;
     default:
         return 0;
