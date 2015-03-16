@@ -28,7 +28,7 @@ double wielomianprosty(double a, double b, double c, double d, double x){
 
 bool foundMiejZerBi = false;
 double miejZerBi=0;
-double miejZerYBi;
+double miejZerYBi=99999999;
 template<class F>void bisekcja(double start, double end, F funk, double epsilon){
     if( (funk(start) >=0 && funk(end) < 0) || (funk(start)<0 && funk(end) >=0) ){
         double center = (start+end)/2;
@@ -39,6 +39,26 @@ template<class F>void bisekcja(double start, double end, F funk, double epsilon)
         } else {
             bisekcja(start, center, funk, epsilon);
             bisekcja(center, end, funk, epsilon);
+        }
+    }
+}
+
+double najdokladniejszyWynik;
+template<class F>void bisekcjaIt(double start, double end, F funk, int it){
+    cout << it << endl;
+    if( (funk(start) >=0 && funk(end) < 0) || (funk(start)<0 && funk(end) >=0) ){
+        double center = (start+end)/2;
+        double centerValue = funk(center);
+        if(abs(centerValue) < abs(miejZerYBi)){
+            cout << "Przypisywanie" << endl;
+            miejZerBi = center;
+            miejZerYBi = centerValue;
+            foundMiejZerBi = true;
+        }
+        if(it > 1 ){
+            cout << "Nastepne wywolywanie" << endl;
+            bisekcjaIt(start, center, funk, --it);
+            bisekcjaIt(center, end, funk, --it);
         }
     }
 }
@@ -59,32 +79,6 @@ template<class F> double siecznych(F funk, double a, double b, double eps){
         return siecznych(funk, x0, a, eps);
     }
     x00=x0;
-}
-
-void drawPreview(){
-    Gnuplot *preview;
-    preview->set_title( "Wykres" );
-    preview->set_xlabel( "X" );
-    preview->set_ylabel( "Y" );
-
-    preview->set_style( "lines" );
-    preview->set_grid();
-
-    // zakres osi x
-    preview->set_xrange( -5 , 5 ) ;
-    int precyzja = 50;
-    double end=5;
-    double start=-5;
-    double skok = (end-start)/50;
-    vector<double> x;
-    vector<double> y;
-    for(double d=start; d<=end;d+=skok){
-        x.push_back(d);
-        y.push_back(sinus(d));
-    }
-
-    preview->plot_xy( x, y, "Wykres funkcji" );
-
 }
 
 double *wspolczynniki;
@@ -157,15 +151,33 @@ int main()
     cout << "Podaj koniec zakresu: ";
     cin >> end;
 
+    bool czyEpsilon;
+
+    cout << "Wybierz warunek stopu: \n1. Epsilon \n2. Liczba iteracji \n> ";
+    cin >> wybor;
+
+    switch(wybor){
+    case 1:
+        czyEpsilon = true;
+        break;
+    case 2:
+        czyEpsilon = false;
+        break;
+    default:
+        return 0;
+    }
+
     while(eps>=0){
-        cout << "\nPodaj wymagana dokladnosc (ujemna zakonczy program): ";
+        if(czyEpsilon)
+            cout << "\n\n\nPodaj wymagana dokladnosc (ujemna zakonczy program): ";
+        else
+            cout << "\n\n\nPodaj wymagana liczbe iteracji (ujemna zakonczy program): ";
         cin >> eps;
         if(eps<0) break;
-
-        //drawPreview();
+        cout << czyEpsilon << " " << eps << endl;
 
         cout << "METODA BISEKCJI:\n";
-        bisekcja(start,end,funk,eps);
+        czyEpsilon ? bisekcja(start,end,funk,eps) : bisekcjaIt(start,end,funk,(int)eps);
         miejZerYBi=funk(miejZerBi);
         if(foundMiejZerBi)
             cout << "Znalezione miejsce zerowe: (" << miejZerBi << ", " << miejZerYBi << ")";
