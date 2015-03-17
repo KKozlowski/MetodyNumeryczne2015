@@ -45,18 +45,18 @@ template<class F>void bisekcja(double start, double end, F funk, double epsilon)
 
 double najdokladniejszyWynik;
 template<class F>void bisekcjaIt(double start, double end, F funk, int it){
-    cout << it << endl;
+    //cout << it << endl;
     if( (funk(start) >=0 && funk(end) < 0) || (funk(start)<0 && funk(end) >=0) ){
         double center = (start+end)/2;
         double centerValue = funk(center);
         if(abs(centerValue) < abs(miejZerYBi)){
-            cout << "Przypisywanie" << endl;
+            //cout << "Przypisywanie" << endl;
             miejZerBi = center;
             miejZerYBi = centerValue;
             foundMiejZerBi = true;
         }
         if(it > 1 ){
-            cout << "Nastepne wywolywanie" << endl;
+            //cout << "Nastepne wywolywanie" << endl;
             bisekcjaIt(start, center, funk, --it);
             bisekcjaIt(center, end, funk, --it);
         }
@@ -79,6 +79,22 @@ template<class F> double siecznych(F funk, double a, double b, double eps){
         return siecznych(funk, x0, a, eps);
     }
     x00=x0;
+}
+
+template<class F> double siecznychIt(F funk, double a, double b, double it){
+    double x0;
+    //double x00;
+    x0 = a - funk(a) * (a - b) / (funk(a) - funk(b));
+    if (x0 != x0){cout << "blad sieczna pionowa, najblizsza wartosc " << miejZerSiecz << endl; return miejZerSiecz;}
+    if(abs(funk(x0)) <abs( miejZerYSiecz )) miejZerSiecz = x0;
+    foundMiejZerSiecz = true;
+    if (it <= 1){
+        return x0;
+    }
+    else{
+        return siecznychIt(funk, x0, a, --it);
+    }
+    //x00=x0;
 }
 
 double *wspolczynniki;
@@ -174,7 +190,6 @@ int main()
             cout << "\n\n\nPodaj wymagana liczbe iteracji (ujemna zakonczy program): ";
         cin >> eps;
         if(eps<0) break;
-        cout << czyEpsilon << " " << eps << endl;
 
         cout << "METODA BISEKCJI:\n";
         czyEpsilon ? bisekcja(start,end,funk,eps) : bisekcjaIt(start,end,funk,(int)eps);
@@ -187,7 +202,7 @@ int main()
         cout << endl << endl;
 
         cout << "METODA SIECZNYCH:\n";
-        miejZerSiecz = siecznych(funk, start, end, eps);
+        miejZerSiecz = czyEpsilon ? siecznych(funk, start, end, eps) : siecznychIt(funk, start, end, eps);
         miejZerYSiecz=funk(miejZerSiecz);
         if(foundMiejZerBi)
             cout << "Znalezione miejsce zerowe: (" << miejZerSiecz << ", " << miejZerYSiecz << ")";
@@ -212,7 +227,6 @@ int main()
 
         main_plot.set_style( "points" );
         main_plot.set_pointsize( 2.0 );
-
 
         vector<double> miejZerX;
         miejZerX.push_back(miejZerBi);
