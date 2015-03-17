@@ -43,7 +43,7 @@ template<class F>void bisekcja(double start, double end, F funk, double epsilon)
     }
 }
 
-double najdokladniejszyWynik;
+double najdokladniejszyWynik = 99;
 template<class F>void bisekcjaIt(double start, double end, F funk, int it){
     //cout << it << endl;
     if( (funk(start) >=0 && funk(end) < 0) || (funk(start)<0 && funk(end) >=0) ){
@@ -219,7 +219,7 @@ int main()
         double skok = (end-start)/precyzja;
         vector<double> x;
         vector<double> y;
-        for(double d=start; d<=end;d+=skok){
+        for(double d=start; d<=end+1;d+=skok){
             x.push_back(d);
             y.push_back(funk(d));
         }
@@ -244,6 +244,10 @@ int main()
             main_plot.plot_xy( miejZerXSieczVec, miejZerYSieczVec, "Znalezione miejsce zerowe, metoda siecznych: ["
                                + to_string(miejZerSiecz)+", "+to_string(miejZerYSiecz)+"]" );
         }
+
+        foundMiejZerBi = false;
+        foundMiejZerSiecz = false;
+        miejZerYBi=99999999;
     }
 
     getchar();
