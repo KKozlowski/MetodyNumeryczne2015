@@ -88,7 +88,7 @@ template<class F> double siecznychIt(F funk, double a, double b, double it){
     if (x0 != x0){cout << "blad sieczna pionowa, najblizsza wartosc " << miejZerSiecz << endl; return miejZerSiecz;}
     if(abs(funk(x0)) <abs( miejZerYSiecz )) miejZerSiecz = x0;
     foundMiejZerSiecz = true;
-    if (it <= 1){
+    if (it <= 1 || funk(x0) == 0){
         return x0;
     }
     else{
@@ -148,6 +148,7 @@ int main()
         double start = -5;
         double end = 5;
         main_plot.set_xrange( start , end ) ;
+        main_plot.set_yrange(-2,2);
         int precyzja = 50;
         double skok = (end-start)/50;
         vector<double> x;
@@ -215,7 +216,7 @@ int main()
         main_plot.set_xrange( start , end ) ;
 
         int precyzja = 50;
-        double skok = (end-start)/50;
+        double skok = (end-start)/precyzja;
         vector<double> x;
         vector<double> y;
         for(double d=start; d<=end;d+=skok){
@@ -228,15 +229,21 @@ int main()
         main_plot.set_style( "points" );
         main_plot.set_pointsize( 2.0 );
 
-        vector<double> miejZerX;
-        miejZerX.push_back(miejZerBi);
-        miejZerX.push_back(miejZerSiecz);
-        vector<double> miejZerY;
-        miejZerY.push_back(miejZerYBi);
-        miejZerY.push_back(miejZerYSiecz);
+        vector<double> miejZerXBiVec;
+        miejZerXBiVec.push_back(miejZerBi);
+        vector<double> miejZerXSieczVec;
+        miejZerXSieczVec.push_back(miejZerSiecz);
+        vector<double> miejZerYBiVec;
+        miejZerYBiVec.push_back(miejZerYBi);
+        vector<double> miejZerYSieczVec;
+        miejZerYSieczVec.push_back(miejZerYSiecz);
         //cout << foundMiejZerBi <<  foundMiejZerSiecz;
-        if(foundMiejZerBi && foundMiejZerSiecz)
-            main_plot.plot_xy( miejZerX, miejZerY, "Znalezione miejsca zerowe" );
+        if(foundMiejZerBi && foundMiejZerSiecz){
+            main_plot.plot_xy( miejZerXBiVec, miejZerYBiVec, "Znalezione miejsce zerowe, metoda bisekcji: ["
+                               + to_string(miejZerBi)+", "+to_string(miejZerYBi)+"]" );
+            main_plot.plot_xy( miejZerXSieczVec, miejZerYSieczVec, "Znalezione miejsce zerowe, metoda siecznych: ["
+                               + to_string(miejZerSiecz)+", "+to_string(miejZerYSiecz)+"]" );
+        }
     }
 
     getchar();
