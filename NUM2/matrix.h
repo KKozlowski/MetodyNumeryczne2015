@@ -13,11 +13,16 @@ public:
     void Write();
     void Transform();
 
+    bool WarunekWierszy();
+    bool WarunekKolumn();
+    bool WarunekKwadratowy();
+
 private:
     bool transformed = false;
     int size;
     std::vector<SimpleEq *> rownania;
     std::vector<Equation *> przeksztalcone;
+
 };
 
 #endif // MATRIX_H

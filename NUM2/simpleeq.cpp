@@ -10,6 +10,11 @@ SimpleEq::SimpleEq(int rozm)
     for(int i=0; i<=rozm ; i++) wsp.push_back(0);
 }
 
+int SimpleEq::GetLevel()
+{
+    return wsp.size() -1;
+}
+
 SimpleEq::~SimpleEq()
 {
 
