@@ -17,9 +17,10 @@ public:
     bool WarunekKolumn();
     bool WarunekKwadratowy();
 
+    int size;
+
 private:
     bool transformed = false;
-    int size;
     std::vector<SimpleEq *> rownania;
     std::vector<Equation *> przeksztalcone;
 
