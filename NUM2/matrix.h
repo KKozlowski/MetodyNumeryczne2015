@@ -22,6 +22,8 @@ public:
 
     Wektor licz(double eps);
 
+    double ** toTable();
+
 private:
     bool transformed = false;
     std::vector<SimpleEq *> rownania;

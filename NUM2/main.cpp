@@ -43,6 +43,10 @@ int main()
 
     m.Transform();
     m.Write();
+    cout << endl;
 
-    m.licz(0.001).wypisz();
+
+    Wektor wynik = m.licz(0.001);
+    cout<<"\nWYNIK:\n";
+    wynik.wypisz();
 }

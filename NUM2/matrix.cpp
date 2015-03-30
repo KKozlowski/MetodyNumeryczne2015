@@ -29,10 +29,38 @@ void Matrix::Transform()
 {
     //TODO: Prawidlowe wybieranie rownan dla danych niewiadomych.
     if(!transformed){
-        for(int i = 1; i<=size; i++){
+
+
+        /*for(int i = 1; i<=size; i++){
             przeksztalcone.push_back(new Equation(operator [](i), i));
+        }*/
+
+        for(int i=0; i<size; i++){
+            double maxVal = 0;
+            int valuer = 0;
+            for(int k=0; k<rownania.size(); k++){
+                double d = rownania[k]->wsp.at(i);
+                if (abs(d) > maxVal){
+                    maxVal = d;
+                    valuer = k;
+                }
+            }
+
+            if(maxVal == 0) cout << "Iteracja rozbiezna";
+            else{
+                SimpleEq *eq = rownania.at(valuer);
+                SimpleEq req(size);
+                for(int i=1; i<=size+1; i++){
+                    req[i]=eq->operator [](i);
+                }
+                Equation *neq = new Equation(req, i+1);
+                przeksztalcone.push_back(neq);
+                rownania.erase(rownania.begin() + valuer);
+            }
         }
+
         transformed = true;
+
     }
 }
 
@@ -61,8 +89,7 @@ Wektor Matrix::licz(double eps)
     Wektor w1(size);
     Wektor w2(size);
 
-    int i=0;
-    while(i<10){
+    while(true){
         for(int i=1; i<=size; i++){
             w2.wypisz();
             w2[i]=przeksztalcone.at(i-1)->Calculate(w1);
@@ -71,8 +98,20 @@ Wektor Matrix::licz(double eps)
         cout << "norma: " << test.norma() << endl;
         if (test.norma() < eps ) break;
         w1 = w2;
-        i++;
     }
 
     return w2;
+}
+
+double **Matrix::toTable()
+{
+    double **tab = new double*[size];
+    for(int i = 0; i<size; i++){
+        tab[i] = new double[size];
+        for(int k=0; i< size; i++){
+            tab[i][k] = przeksztalcone[i]->operator[](k);
+        }
+    }
+
+    return tab;
 }
