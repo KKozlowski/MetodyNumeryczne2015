@@ -19,9 +19,11 @@ TEMPLATE = app
 SOURCES += main.cpp \
     simpleeq.cpp \
     matrix.cpp \
-    equation.cpp
+    equation.cpp \
+    wektor.cpp
 
 HEADERS += \
     simpleeq.h \
     matrix.h \
-    equation.h
+    equation.h \
+    wektor.h

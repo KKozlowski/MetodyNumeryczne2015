@@ -3,6 +3,7 @@
 
 #include "simpleeq.h"
 #include "equation.h"
+#include "wektor.h"
 
 class Matrix
 {
@@ -18,6 +19,8 @@ public:
     bool WarunekKwadratowy();
 
     int size;
+
+    Wektor licz(double eps);
 
 private:
     bool transformed = false;

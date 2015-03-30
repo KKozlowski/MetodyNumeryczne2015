@@ -20,7 +20,7 @@ void Equation::Write()
     //cout << Calculate(v) << endl;
 }
 
-double Equation::Calculate(vector<double> vec)
+double Equation::Calculate(Wektor vec)
 {
     double wynik;
     for(int i = 1; i <= GetLevel(); i++){

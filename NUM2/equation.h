@@ -3,6 +3,7 @@
 
 #include "simpleeq.h"
 #include <cmath>
+#include "wektor.h"
 
 using namespace std;
 
@@ -38,7 +39,7 @@ public:
 
     void Write();
 
-    double Calculate(vector<double> vec);
+    double Calculate(Wektor vec);
 
     double AbsoluteSum();
 };

@@ -1,4 +1,5 @@
 #include "matrix.h"
+#include "wektor.h"
 
 Matrix::Matrix(int rozmiar)
 {
@@ -55,3 +56,23 @@ bool Matrix::WarunekKwadratowy()
     return true;
 }
 
+Wektor Matrix::licz(double eps)
+{
+    Wektor w1(size);
+    Wektor w2(size);
+
+    int i=0;
+    while(i<10){
+        for(int i=1; i<=size; i++){
+            w2.wypisz();
+            w2[i]=przeksztalcone.at(i-1)->Calculate(w1);
+        }
+        Wektor test = w2-w1;
+        cout << "norma: " << test.norma() << endl;
+        if (test.norma() < eps ) break;
+        w1 = w2;
+        i++;
+    }
+
+    return w2;
+}
