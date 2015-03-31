@@ -88,7 +88,6 @@ Wektor Matrix::licz(double eps)
 {
     Wektor w1(size);
     Wektor w2(size);
-
     while(true){
         for(int i=1; i<=size; i++){
             w2.wypisz();
