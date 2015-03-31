@@ -41,36 +41,41 @@ Matrix readfile(string filename){
 
 int main()
 {
-    cout << "Podaj nazwe pliku: ";
     string filename;
+    cout << "Podaj nazwe pliku: ";
     cin >> filename;
-    int ileRownan = 3;
-    Matrix m = readfile(filename);
 
-    if(m.size == 0) {
-        cout << "Blad wczytywania pliku" << endl;
-        return 0;
+    while(filename != "exit"){
+        Matrix m = readfile(filename);
+
+        if(m.size == 0) {
+            cout << "Blad wczytywania pliku" << endl;
+            return 0;
+        }
+
+        m.Write();
+        m.Transform();
+        cout << endl;
+        m.Write();
+        if(m.WarunekKolumn() || m.WarunekWierszy() || m.WarunekKwadratowy())
+            cout << "\nUklad spelnia warunek zbieznosci\n";
+        else{
+            cout << "\nUklad nie spelnia warunku zbieznosci\n";
+            return 0;
+        }
+
+
+        cout << endl;
+
+        cout << "Podaj dokladnosc: ";
+        double eps;
+        cin >> eps;
+
+        Wektor wynik = m.licz(eps);
+        cout<<"\nWYNIK:\n";
+        wynik.wypisz();
+
+        cout << "\n\nPodaj nazwe pliku: ";
+        cin >> filename;
     }
-
-    m.Write();
-    m.Transform();
-    cout << endl;
-    m.Write();
-    if(m.WarunekKolumn() || m.WarunekWierszy() || m.WarunekKwadratowy())
-        cout << "\nUklad spelnia warunek zbieznosci\n";
-    else{
-        cout << "\nUklad nie spelnia warunku zbieznosci\n";
-        return 0;
-    }
-
-
-    cout << endl;
-
-    cout << "Podaj dokladnosc: ";
-    double eps;
-    cin >> eps;
-
-    Wektor wynik = m.licz(eps);
-    cout<<"\nWYNIK:\n";
-    wynik.wypisz();
 }

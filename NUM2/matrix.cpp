@@ -114,14 +114,16 @@ Wektor Matrix::licz(double eps)
 {
     Wektor w1(size);
     Wektor w2(size);
+    int it = 1;
     while(true){
         for(int i=1; i<=size; i++){
             w2.wypisz();
             w2[i]=przeksztalcone.at(i-1)->Calculate(w1);
         }
         Wektor test = w2-w1;
-        cout << "norma: " << test.norma() << endl << endl;
+        cout << "norma: " << test.norma() << ", iteracja " << it << endl << endl;
         if (test.norma() < eps ) break;
+        it++;
         w1 = w2;
     }
 
