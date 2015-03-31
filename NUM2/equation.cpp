@@ -35,7 +35,7 @@ double Equation::AbsoluteSum()
     double suma;
     for(int i=1; i<=GetLevel(); i++){
         suma += abs(operator [](i));
-        return suma;
     }
+    return suma;
 }
 

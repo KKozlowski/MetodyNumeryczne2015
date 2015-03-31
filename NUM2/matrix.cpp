@@ -40,7 +40,7 @@ void Matrix::Transform()
             int valuer = 0;
             for(int k=0; k<rownania.size(); k++){
                 double d = rownania[k]->wsp.at(i);
-                if (abs(d) > maxVal){
+                if (abs(d) > abs(maxVal)){
                     maxVal = d;
                     valuer = k;
                 }
@@ -68,6 +68,7 @@ bool Matrix::WarunekWierszy()
 {
     for(int i=0;i < size; i++){
         double tempSize = przeksztalcone[i]->AbsoluteSum();
+        //cout << "S" << tempSize << endl;
         if (tempSize >= 1) return false;
     }
 
@@ -76,12 +77,37 @@ bool Matrix::WarunekWierszy()
 
 bool Matrix::WarunekKolumn()
 {
+    for (int i=1; i<=size; i++){
+        double sum = 0;
+        for(int k=0; k<size; k++){
+            double skladnik = abs(przeksztalcone[k]->operator[](i));
+            sum+=skladnik;
+
+        }
+        //cout << "SK" << sum << endl;
+        if (sum >= 1) return false;
+    }
+
     return true;
 }
 
 bool Matrix::WarunekKwadratowy()
 {
-    return true;
+    double sum = 0;
+    for (int i=1; i<=size; i++){
+        for(int k=0; k<size; k++){
+            double skladnik = abs(przeksztalcone[k]->operator[](i));
+            sum+=skladnik*skladnik;
+            //cout << "skladnik " << skladnik << endl;
+        }
+    }
+
+    sum = sqrt(sum);
+
+    if(sum <1)
+        return true;
+    else
+        return false;
 }
 
 Wektor Matrix::licz(double eps)
@@ -94,7 +120,7 @@ Wektor Matrix::licz(double eps)
             w2[i]=przeksztalcone.at(i-1)->Calculate(w1);
         }
         Wektor test = w2-w1;
-        cout << "norma: " << test.norma() << endl;
+        cout << "norma: " << test.norma() << endl << endl;
         if (test.norma() < eps ) break;
         w1 = w2;
     }

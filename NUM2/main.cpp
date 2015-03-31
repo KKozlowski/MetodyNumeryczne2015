@@ -13,7 +13,7 @@ Matrix readfile(string filename){
     string txt = ".txt";
 
     plik.open(filename.c_str()+txt);
-    if(!plik.good()){cout << "blad" << endl; return false;}
+    if(!plik.good()) return Matrix(0);
 
     int size;
     plik >> size;
@@ -47,14 +47,30 @@ int main()
     int ileRownan = 3;
     Matrix m = readfile(filename);
 
+    if(m.size == 0) {
+        cout << "Blad wczytywania pliku" << endl;
+        return 0;
+    }
+
     m.Write();
-    cout << endl;
     m.Transform();
+    cout << endl;
     m.Write();
+    if(m.WarunekKolumn() || m.WarunekWierszy() || m.WarunekKwadratowy())
+        cout << "\nUklad spelnia warunek zbieznosci\n";
+    else{
+        cout << "\nUklad nie spelnia warunku zbieznosci\n";
+        return 0;
+    }
+
+
     cout << endl;
 
+    cout << "Podaj dokladnosc: ";
+    double eps;
+    cin >> eps;
 
-    Wektor wynik = m.licz(0.001);
+    Wektor wynik = m.licz(eps);
     cout<<"\nWYNIK:\n";
     wynik.wypisz();
 }
