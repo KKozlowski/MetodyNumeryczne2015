@@ -45,26 +45,17 @@ vector<double> obliczWezly(double (*funk)(double), vector<double> w){
 
 double delta(int i, int k){
     if(k == 0)
-        return (wartosci[i+1]-wartosci[i])/(wezly[i+1]-wezly[i]);
+        return (wartosci[i+1]);
     else
         return (delta(i+1,k-1) - delta(i,k-1))/(wartosci[i+k]-wartosci[i]);
-}
-
-double iloraz(int x1, int x2){
-    if (x1 == x2) return wartosci[x1];
-
-    double topOne = iloraz(x1+1,x2);
-    double topTwo = iloraz(x1,x2-1);
-    double mianownik = wartosci[x2] - wartosci[x1];
-    return (topOne-topTwo)/mianownik;
 }
 
 
 void obliczWsp(){
     wspol.clear();
     wspol.push_back( wartosci[0]);
-    for(int i=0; i<wartosci.size()-1; i++){
-        wspol.push_back( delta(1,i));
+    for(int i=1; i<wartosci.size(); i++){
+        wspol.push_back( delta(0,i));
     }
 }
 
@@ -84,6 +75,15 @@ void wypiszWektor(vector<double> w){
 void wypiszWektor(vector<double> w, string opis){
     cout << "\n" << opis << ": ";
     wypiszWektor(w);
+}
+
+double iloraz(int x1, int x2){
+    if (x1 == x2) return wartosci[x1];
+
+    double topOne = iloraz(x1+1,x2);
+    double topTwo = iloraz(x1,x2-1);
+    double mianownik = wartosci[x2] - wartosci[x1];
+    return (topOne-topTwo)/mianownik;
 }
 
 double interpol(double x){
