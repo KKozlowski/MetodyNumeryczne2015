@@ -43,25 +43,33 @@ vector<double> obliczWezly(double (*funk)(double), vector<double> w){
     return result;
 }
 
+double delta(int i, int k){
+    if(k == 0)
+        return (wartosci[i+1]-wartosci[i])/(wezly[i+1]-wezly[i]);
+    else
+        return (delta(i+1,k-1) - delta(i,k-1))/(wartosci[i+k]-wartosci[i]);
+}
+
 double iloraz(int x1, int x2){
     if (x1 == x2) return wartosci[x1];
 
     double topOne = iloraz(x1+1,x2);
     double topTwo = iloraz(x1,x2-1);
     double mianownik = wartosci[x2] - wartosci[x1];
-    return topOne*topTwo/mianownik;
+    return (topOne-topTwo)/mianownik;
 }
 
 
 void obliczWsp(){
+    wspol.clear();
     wspol.push_back( wartosci[0]);
-    for(int i=1; i<wartosci.size(); i++){
-        wspol.push_back( iloraz(0,i));
+    for(int i=0; i<wartosci.size()-1; i++){
+        wspol.push_back( delta(1,i));
     }
 }
 
 double fi(double x, int lvl){
-    if (lvl = 0) return 1;
+    if (lvl == 0) return 1;
     return fi(x,lvl-1)*(x-wezly[lvl-1]);
 }
 
@@ -76,6 +84,14 @@ void wypiszWektor(vector<double> w){
 void wypiszWektor(vector<double> w, string opis){
     cout << "\n" << opis << ": ";
     wypiszWektor(w);
+}
+
+double interpol(double x){
+    double y = 0;
+    for(int i=0; i<wezly.size(); i++){
+        y+=wspol[i]*fi(x,i);
+    }
+    return y;
 }
 
 double sinus(double x){
@@ -143,7 +159,8 @@ int main()
     wartosci = obliczWezly(funk, wezly);
     wypiszWektor(wartosci, "Wartosci funkcji w wezlach");
     obliczWsp();
-    wypiszWektor(wspol, "Wspolczynniki a");
+    cout << "Liczba wspol: " << wspol.size() << endl;
+    wypiszWektor(wspol, "Wspolczynniki a: ");
 
     Gnuplot main_plot;
 
@@ -159,7 +176,7 @@ int main()
         double end = 5;
         main_plot.set_xrange( start , end ) ;
         main_plot.set_yrange(-2,2);
-        int precyzja = 50;
+        int precyzja = 100;
         double skok = (end-start)/50;
         vector<double> x;
         vector<double> y;
@@ -170,6 +187,24 @@ int main()
 
         main_plot.plot_xy( x, y, "Wykres pogladowy." );
     }
+    {
+        double start = -5;
+        double end = 5;
+        main_plot.set_xrange( start , end ) ;
+        main_plot.set_yrange(-2,2);
+        int precyzja = 50;
+        double skok = (end-start)/10000;
+        vector<double> x;
+        vector<double> y;
+        for(double d=start; d<=end;d+=skok){
+            x.push_back(d);
+           // cout << interpol(d) << endl;
+            y.push_back(interpol(d));
+        }
+
+        main_plot.plot_xy( x, y, "Wykres interpolacyjne." );
+    }
+
 
     getchar();
     getchar();
