@@ -45,16 +45,16 @@ vector<double> obliczWezly(double (*funk)(double), vector<double> w){
 
 double delta(int i, int k){
     if(k == 0)
-        return (wartosci[i+1]);
+        return (wartosci[i]);
     else
-        return (delta(i+1,k-1) - delta(i,k-1))/(wartosci[i+k]-wartosci[i]);
+        return (delta(i+1,k-1) - delta(i,k-1))/(wezly[i+k]-wezly[i]);
 }
 
 
 void obliczWsp(){
     wspol.clear();
-    wspol.push_back( wartosci[0]);
-    for(int i=1; i<wartosci.size(); i++){
+    //wspol.push_back( wartosci[0]);
+    for(int i=0; i<wartosci.size(); i++){
         wspol.push_back( delta(0,i));
     }
 }
