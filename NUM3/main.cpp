@@ -119,12 +119,15 @@ int stopien;
 int main()
 {
     Gnuplot::set_GNUPlotPath( GNUPLOT_PATH );
-
-    cout << "Podaj nazwe pliku z lista wezlow: ";
     string nazwaPliku;
-    cin >> nazwaPliku;
-    wezly = czytaj(nazwaPliku);
-    wypiszWektor(wezly, "Wezly");
+
+
+    do{
+        cout << "Podaj nazwe pliku z lista wezlow: ";
+        cin >> nazwaPliku;
+        wezly = czytaj(nazwaPliku);
+        wypiszWektor(wezly, "Wezly");
+    }while(wezly.size()==0);
 
     cout << "Podaj nazwe pliku z lista wartosci \n(wpisz '0' aby wybrac gotowa funkcje): ";
     cin >> nazwaPliku;
