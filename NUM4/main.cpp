@@ -6,23 +6,31 @@
 #include "gnuplot_i.hpp"
 
 #define GNUPLOT_PATH "C:/gnuplot/bin"
+#define M_PI 3.1415926
 
 using namespace std;
 
 double start, stop;
 double h;
 double (*funk)(double);
+double (*funkCZ)(double);
 bool metodaNewt = true;
+
+double czebyszew(int n){
+    double sum = 0;
+    for(int k=1; k<=n;k++){
+        sum += funkCZ(cos((2*k-1)/(2.0*n)*M_PI));
+    }
+    sum *= M_PI/n;
+
+    return sum;
+}
 
 double simpson(double x1, double x2){ //Nie dziala
     double result;
     double I_Ti = h*(funk(x1)+funk(x2))/2;
     double I_Pi = h*funk(x1);
-    //result = (1.0/3.0)*h*(funk(x1)+4*funk((x1+x2)/2)+funk(x2));
-    //result = h*funk((x1+x2)/2);
-    //result = I_Ti;
     result = (2.0/3.0)*I_Pi+(1.0/3.0)*I_Ti;
-    result = abs(result);
     cout << "Simpson " << result << endl;
     return result;
 }
@@ -79,6 +87,10 @@ double wielomianprosty(double a, double b, double c, double d, double x){
 double *wspolczynniki;
 int stopien;
 
+double waga(double x){
+    return sqrt(1-x*x);
+}
+
 void wybierzFunk(){
     cout << "Wybierz funkcje: \n1. Sinus\n2. Wykladnicza\n3. Wielomian \n4. Wielomian przykladowy \n> ";
     int wybor;
@@ -116,13 +128,6 @@ int main()
 {
     Gnuplot::set_GNUPlotPath( GNUPLOT_PATH );
 
-    try{
-        wybierzFunk();
-    } catch (string s){
-        cout << s << endl;
-        return 0;
-    }
-
     {
         cout << "Wybierz metode: \n1. Newtona-Cotesa\n2. Gaussa-Czebyszewa\n> ";
         int wybor;
@@ -134,6 +139,13 @@ int main()
             cout << "Method not found\n";
             return 0;
         }
+    }
+
+    try{
+        wybierzFunk();
+    } catch (string s){
+        cout << s << endl;
+        return 0;
     }
 
     if (metodaNewt)
@@ -175,7 +187,9 @@ int main()
     }
     else
     {
-        cout << "To be done \n";
+        funkCZ = [](double x) -> double {return funk(x)*waga(x);};
+        for(int i=2; i<=10; i++)
+            cout << "Liczba wezlow: " << i <<"; wynik: " << czebyszew(i) << endl;
     }
     return 0;
 }
