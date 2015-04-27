@@ -14,7 +14,14 @@ double h;
 double (*funk)(double);
 
 double simpson(double x1, double x2){ //Nie dziala
-    double result = (1/3)*h*(funk(x1)+4*funk((x1+x2)/2)+funk(x2));
+    double result;
+    double I_Ti = h*(funk(x1)+funk(x2))/2;
+    double I_Pi = h*funk(x1);
+    //result = (1.0/3.0)*h*(funk(x1)+4*funk((x1+x2)/2)+funk(x2));
+    //result = h*funk((x1+x2)/2);
+    //result = I_Ti;
+    result = (2.0/3.0)*I_Pi+(1.0/3.0)*I_Ti;
+    result = abs(result);
     cout << "Simpson " << result << endl;
     return result;
 }
