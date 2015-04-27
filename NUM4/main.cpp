@@ -11,6 +11,7 @@
 using namespace std;
 
 double start, stop;
+double dokladnosc;
 double h;
 double (*funk)(double);
 double (*funkCZ)(double);
@@ -31,7 +32,7 @@ double simpson(double x1, double x2){ //Nie dziala
     double I_Ti = h*(funk(x1)+funk(x2))/2;
     double I_Pi = h*funk(x1);
     result = (2.0/3.0)*I_Pi+(1.0/3.0)*I_Ti;
-    cout << "Simpson " << result << endl;
+    //cout << "Simpson " << result << endl;
     return result;
 }
 
@@ -177,9 +178,24 @@ int main()
 
 
         cout << "Podaj dokladnosc calkowania: ";
-        cin >> h;
+        cin >> dokladnosc;
 
-        cout << newton() << endl;
+        h=abs(start-stop)/20.0;
+
+        double prev, now;
+        prev = newton();
+        int j = 0;
+        while(true){
+            j++;
+            h/=2;
+            now = newton();
+            if(abs(now-prev) < dokladnosc){
+                cout << "WYNIK: " << newton() << " [" << j << " iteracja]\n";
+                break;
+            }
+            else
+                prev = now;
+        }
 
 
         getchar();
@@ -189,7 +205,7 @@ int main()
     {
         funkCZ = [](double x) -> double {return funk(x)*waga(x);};
         for(int i=2; i<=10; i++)
-            cout << "Liczba wezlow: " << i <<"; wynik: " << czebyszew(i) << endl;
+            cout << "Liczba wezlow: " << i <<"; WYNIK: " << czebyszew(i) << endl;
     }
     return 0;
 }
