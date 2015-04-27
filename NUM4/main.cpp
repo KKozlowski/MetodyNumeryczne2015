@@ -12,6 +12,7 @@ using namespace std;
 double start, stop;
 double h;
 double (*funk)(double);
+bool metodaNewt = true;
 
 double simpson(double x1, double x2){ //Nie dziala
     double result;
@@ -78,10 +79,7 @@ double wielomianprosty(double a, double b, double c, double d, double x){
 double *wspolczynniki;
 int stopien;
 
-int main()
-{
-    Gnuplot::set_GNUPlotPath( GNUPLOT_PATH );
-
+void wybierzFunk(){
     cout << "Wybierz funkcje: \n1. Sinus\n2. Wykladnicza\n3. Wielomian \n4. Wielomian przykladowy \n> ";
     int wybor;
 
@@ -110,46 +108,75 @@ int main()
         funk=[](double x) -> double {return wielomianprosty(2,3,2,1.05,x);};
         break;
     default:
+        throw string("Function not found");
+    }
+}
+
+int main()
+{
+    Gnuplot::set_GNUPlotPath( GNUPLOT_PATH );
+
+    try{
+        wybierzFunk();
+    } catch (string s){
+        cout << s << endl;
         return 0;
     }
 
+    {
+        cout << "Wybierz metode: \n1. Newtona-Cotesa\n2. Gaussa-Czebyszewa\n> ";
+        int wybor;
 
-
-
-    cout << "Podaj poczatek i koniec przedzialu: ";
-    cin >> start >> stop;
-
-    Gnuplot main_plot;
-
-    main_plot.set_title( "Wykres" );
-    main_plot.set_xlabel( "X" );
-    main_plot.set_ylabel( "Y" );
-
-
-    main_plot.set_grid();
-    main_plot.set_xrange( start , stop ) ;
-    main_plot.set_yrange(-2,2);
-    main_plot.set_style( "lines" );
-    int precyzja = 10000;
-    double skok = (stop-start)/precyzja;
-    vector<double> x;
-    vector<double> y;
-    for(double d=start; d<=stop;d+=skok){
-        x.push_back(d);
-        y.push_back(funk(d));
+        cin >> wybor;
+        if (wybor == 2) metodaNewt = false;
+        else if (wybor != 1)
+        {
+            cout << "Method not found\n";
+            return 0;
+        }
     }
 
-    main_plot.plot_xy( x, y, "Wykres funkcji." );
+    if (metodaNewt)
+    {
+        cout << "Podaj poczatek i koniec przedzialu: ";
+        cin >> start >> stop;
+
+        Gnuplot main_plot;
+
+        main_plot.set_title( "Wykres" );
+        main_plot.set_xlabel( "X" );
+        main_plot.set_ylabel( "Y" );
 
 
-    cout << "Podaj dokladnosc calkowania: ";
-    cin >> h;
+        main_plot.set_grid();
+        main_plot.set_xrange( start , stop ) ;
+        main_plot.set_yrange(-2,2);
+        main_plot.set_style( "lines" );
+        int precyzja = 10000;
+        double skok = (stop-start)/precyzja;
+        vector<double> x;
+        vector<double> y;
+        for(double d=start; d<=stop;d+=skok){
+            x.push_back(d);
+            y.push_back(funk(d));
+        }
 
-    cout << newton() << endl;
+        main_plot.plot_xy( x, y, "Wykres funkcji." );
 
 
-    getchar();
-    getchar();
+        cout << "Podaj dokladnosc calkowania: ";
+        cin >> h;
+
+        cout << newton() << endl;
+
+
+        getchar();
+        getchar();
+    }
+    else
+    {
+        cout << "To be done \n";
+    }
     return 0;
 }
 
