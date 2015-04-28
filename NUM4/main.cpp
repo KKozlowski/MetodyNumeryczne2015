@@ -11,16 +11,16 @@
 using namespace std;
 
 double start, stop;
-double dokladnosc;
+double dokladnosc=0.1;
 double h;
 double (*funk)(double);
-double (*funkCZ)(double);
+double (*funkN)(double);
 bool metodaNewt = true;
 
 double czebyszew(int n){
     double sum = 0;
     for(int k=1; k<=n;k++){
-        sum += funkCZ(cos((2*k-1)/(2.0*n)*M_PI));
+        sum += funk(cos((2*k-1)/(2.0*n)*M_PI));
     }
     sum *= M_PI/n;
 
@@ -70,6 +70,10 @@ double sinus(double x){
     return sin(x);
 }
 
+double specialSinus(double x){
+    return sin((x+1)*M_PI/2);
+}
+
 double power(double base, double exp){
     return pow(base, exp);
 }
@@ -81,10 +85,6 @@ double horner(double wsp[],int st, double x)
   return x*horner(wsp,st-1,x)+wsp[st];
 }
 
-double wielomianprosty(double a, double b, double c, double d, double x){
-    return a*x*x*x -b*x*x +c*x -d;
-}
-
 double *wspolczynniki;
 int stopien;
 
@@ -93,7 +93,7 @@ double waga(double x){
 }
 
 void wybierzFunk(){
-    cout << "Wybierz funkcje: \n1. Sinus\n2. Wykladnicza\n3. Wielomian \n4. Wielomian przykladowy \n> ";
+    cout << "Wybierz funkcje: \n1. Sinus\n2. Wykladnicza\n3. Wielomian \n4. sin((x-1)*pi/2) \n> ";
     int wybor;
 
     cin >> wybor;
@@ -118,7 +118,7 @@ void wybierzFunk(){
         funk=[](double x) -> double {return horner(wspolczynniki,stopien,x);};
         break;
     case 4:
-        funk=[](double x) -> double {return wielomianprosty(2,3,2,1.05,x);};
+        funk=[](double x) -> double {return specialSinus(x);};
         break;
     default:
         throw string("Function not found");
@@ -151,9 +151,19 @@ int main()
 
     if (metodaNewt)
     {
-        cout << "Podaj poczatek i koniec przedzialu: ";
+        cout << "Z waga[1], czy bez[2] ? ";
+        int czyWaga;
+        cin >> czyWaga;
+        if(czyWaga == 1){
+            cout << "Z waga.\n";
+            funkN = funk;
+            funk = [](double x) -> double {return funkN(x)/waga(x);};
+            start = -0.99999999;
+            stop = 0.999999999;
+        } else {
+        cout << "Bez wagi. Podaj poczatek i koniec przedzialu: ";
         cin >> start >> stop;
-
+        }
         Gnuplot main_plot;
 
         main_plot.set_title( "Wykres" );
@@ -176,25 +186,28 @@ int main()
 
         main_plot.plot_xy( x, y, "Wykres funkcji." );
 
-
-        cout << "Podaj dokladnosc calkowania: ";
-        cin >> dokladnosc;
-
-        h=abs(start-stop)/20.0;
-
-        double prev, now;
-        prev = newton();
-        int j = 0;
         while(true){
-            j++;
-            h/=2;
-            now = newton();
-            if(abs(now-prev) < dokladnosc){
-                cout << "WYNIK: " << newton() << " [" << j << " iteracja]\n";
-                break;
+            cout << "Podaj dokladnosc calkowania (niedodatnia przerwie program): ";
+            cin >> dokladnosc;
+            if (dokladnosc <=0 ) break;
+            h=abs(start-stop)/10.0;
+
+            double prev, now;
+            prev = newton();
+            int j = 0;
+            while(true){
+                j++;
+                h/=2;
+                now = newton();
+                //cout << now<< endl;
+                if(abs(now-prev) < dokladnosc){
+                    cout << "WYNIK: " << newton() << " [" << j << " iteracja]\n";
+                    break;
+                }
+                else{
+                    prev = now;
+                }
             }
-            else
-                prev = now;
         }
 
 
@@ -203,7 +216,6 @@ int main()
     }
     else
     {
-        funkCZ = [](double x) -> double {return funk(x)*waga(x);};
         for(int i=2; i<=10; i++)
             cout << "Liczba wezlow: " << i <<"; WYNIK: " << czebyszew(i) << endl;
     }
