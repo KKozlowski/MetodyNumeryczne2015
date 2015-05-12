@@ -24,15 +24,6 @@ double wezel(int k, int n){
 }
 
 double polynomial(double x, int n){
-    /*int dwojka = 1;
-    for(int i=0; i<=n-1;i++) dwojka*=2;
-
-    double mnoznik = 1;
-    for (int i = 1; i<=n; i++)
-        mnoznik *= (x-wezel(i,n))!= 0 ? x-wezel(i,n) : 1;
-    //cout << "poly " << mnoznik << endl;
-    return mnoznik*dwojka;*/
-    //return cos(n/cos(x));
     return cos(n*acos((x)));
 }
 
@@ -46,13 +37,11 @@ double calka(int n){
     return sum;
 }
 
-double cj(int j, int N){ //co jest zle?
+double cj(int j, int N){
     double sum = 0;
-    for(int i=1; i<=N; i++){
-        //sum+=(funk(wezel(i,N))*polynomial(wezel(i,N), N)); //polynomial mno¿y siê raz przez zero.
+    for(int i=1; i<=N; i++)
         sum+=(funk(wezel(i,N))*cos(M_PI*j*(i-0.5)/N));
-        //cout << "cj " << funk(wezel(i,N)) << " " << polynomial(wezel(i,N), N) << endl;
-    }
+
     sum*= (2.0/N);
     return sum;
 }
@@ -60,7 +49,6 @@ double cj(int j, int N){ //co jest zle?
 double approx(double x, int N){
     double result = 0;
     for(int i = 0;i<=N-1;i++){
-        //cout << "app " << cj(i,N)<< " " << polynomial(x,i) << endl;
         result+= (cj(i,N)*polynomial(x,i));
     }
     result -= (0.5*cj(0,N));
@@ -161,7 +149,7 @@ int main()
     main_plot.set_xrange( start , stop ) ;
     main_plot.set_yrange(-2,2);
     main_plot.set_style( "lines" );
-    int precyzja = 100;
+    int precyzja = 1000;
     double skok = (stop-start)/precyzja;
     vector<double> x;
     vector<double> y;
@@ -178,7 +166,6 @@ int main()
         y_approx5.push_back(approx(d,5));
         y_approx7.push_back(approx(d,7));
         y_approx10.push_back(approx(d,10));
-        //cout << funk(d) << " " << approx(d,12) << endl;
     }
 
     main_plot.plot_xy( x, y, "Wykres funkcji." );
