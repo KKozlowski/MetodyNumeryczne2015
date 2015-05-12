@@ -24,14 +24,16 @@ double wezel(int k, int n){
 }
 
 double polynomial(double x, int n){
-    int dwojka = 1;
+    /*int dwojka = 1;
     for(int i=0; i<=n-1;i++) dwojka*=2;
 
     double mnoznik = 1;
     for (int i = 1; i<=n; i++)
-        mnoznik *= (x-wezel(i,n));
+        mnoznik *= (x-wezel(i,n))!= 0 ? x-wezel(i,n) : 1;
     //cout << "poly " << mnoznik << endl;
-    return mnoznik*dwojka;
+    return mnoznik*dwojka;*/
+    //return cos(n/cos(x));
+    return cos(n*acos((x)));
 }
 
 double calka(int n){
@@ -47,10 +49,11 @@ double calka(int n){
 double cj(int j, int N){ //co jest zle?
     double sum = 0;
     for(int i=1; i<=N; i++){
-        sum+=(funk(wezel(i,N))*polynomial(wezel(i,N), N));
-        //sum+=(funk(wezel(i,N))*cos(M_PI*j*(i-0.5)/N));
+        //sum+=(funk(wezel(i,N))*polynomial(wezel(i,N), N)); //polynomial mno¿y siê raz przez zero.
+        sum+=(funk(wezel(i,N))*cos(M_PI*j*(i-0.5)/N));
+        //cout << "cj " << funk(wezel(i,N)) << " " << polynomial(wezel(i,N), N) << endl;
     }
-    sum*= (2/N);
+    sum*= (2.0/N);
     return sum;
 }
 
@@ -79,11 +82,7 @@ void wypiszWektor(vector<double> w, string opis){
 
 
 double sinus(double x){
-    return sin(x);
-}
-
-double specialSinus(double x){
-    return sin((x+1)*M_PI/2);
+    return sin(x*5);
 }
 
 double power(double base, double exp){
@@ -105,7 +104,7 @@ double waga(double x){
 }
 
 void wybierzFunk(){
-    cout << "Wybierz funkcje: \n1. Sinus\n2. Wykladnicza\n3. Wielomian \n4. sin((x-1)*pi/2) \n> ";
+    cout << "Wybierz funkcje: \n1. f(x) = sinus(5x)\n2. f(x) = 2^(5x)\n3. Wielomian \n4. f(x) = |2x| \n> ";
     int wybor;
 
     cin >> wybor;
@@ -115,7 +114,7 @@ void wybierzFunk(){
         funk=sinus;
         break;
     case 2:
-        funk=[](double x) -> double {return power(2,x);};
+        funk=[](double x) -> double {return power(2,x*5);};
         break;
     case 3:
         cout<<"Podaj stopien wielomianu: ";
@@ -130,7 +129,7 @@ void wybierzFunk(){
         funk=[](double x) -> double {return horner(wspolczynniki,stopien,x);};
         break;
     case 4:
-        funk=[](double x) -> double {return specialSinus(x);};
+        funk=[](double x) -> double {return abs(2*x);};
         break;
     default:
         throw string("Function not found");
@@ -148,11 +147,8 @@ int main()
         return 0;
     }
 
-    for(int i=2; i<=10; i++)
-        cout << "Liczba wezlow: " << i <<"; WYNIK: " << calka(i) << endl;
-
-    start = -0.99999999;
-    stop = 0.999999999;
+    start = -1;
+    stop = 1;
 
     Gnuplot main_plot;
 
@@ -165,21 +161,33 @@ int main()
     main_plot.set_xrange( start , stop ) ;
     main_plot.set_yrange(-2,2);
     main_plot.set_style( "lines" );
-    int precyzja = 10000;
+    int precyzja = 100;
     double skok = (stop-start)/precyzja;
     vector<double> x;
     vector<double> y;
-    vector<double> y_approx;
+    vector<double> y_approx2;
+    vector<double> y_approx4;
+    vector<double> y_approx5;
+    vector<double> y_approx7;
+    vector<double> y_approx10;
     for(double d=start; d<=stop;d+=skok){
         x.push_back(d);
         y.push_back(funk(d));
-        y_approx.push_back(approx(d,5));
-        cout << funk(d) << " " << approx(d,5) << endl;
+        y_approx2.push_back(approx(d,2));
+        y_approx4.push_back(approx(d,4));
+        y_approx5.push_back(approx(d,5));
+        y_approx7.push_back(approx(d,7));
+        y_approx10.push_back(approx(d,10));
+        //cout << funk(d) << " " << approx(d,12) << endl;
     }
 
     main_plot.plot_xy( x, y, "Wykres funkcji." );
 
-    main_plot.plot_xy( x, y_approx, "Wykres funkcji." );
+    main_plot.plot_xy( x, y_approx2, "2 wezly" );
+    main_plot.plot_xy( x, y_approx4, "4 wezly" );
+    main_plot.plot_xy( x, y_approx5, "5 wezlow" );
+    main_plot.plot_xy( x, y_approx7, "7 wezlow" );
+    main_plot.plot_xy( x, y_approx10, "10 wezlow" );
 
     getchar();
     getchar();
