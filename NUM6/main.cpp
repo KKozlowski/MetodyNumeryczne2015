@@ -14,7 +14,7 @@ double start, stop;
 
 double M = 5.974e24;
 double G = 6.67e-11;
-double h = 1; //wielkosc kroku calkowania
+double h = 3; //wielkosc kroku calkowania
 const int table_size = 30000;
 
 double x[table_size];
@@ -125,7 +125,7 @@ int main()
         return 0;
     }
 
-    liczAlgorytmemRungegoKutty(x,y,vx,vy);
+    liczAlgorytmemRungegoKutty(x,vx,y,vy);
 
     start = 0;
     stop = table_size-1;
@@ -220,8 +220,8 @@ int main()
         XY_plot.set_ylabel( "Y" );
 
         XY_plot.set_grid();
-        XY_plot.set_xrange( min(x) , max(x) ) ;
-        XY_plot.set_yrange(min(y),max(y));
+        XY_plot.set_xrange( min(x)*1.1 , max(x)*1.1 ) ;
+        XY_plot.set_yrange(min(y)*1.1,max(y)*1.1);
         XY_plot.set_style( "lines" );
         vector<double> poz;
         vector<double> pion;
@@ -231,6 +231,14 @@ int main()
         }
 
         XY_plot.plot_xy( poz, pion, "Wykres funkcji." );
+
+        XY_plot.set_style( "points" );
+        vector<double> poz0 {x[0]};
+        vector<double> pion0{y[0]};
+        XY_plot.plot_xy( poz0, pion0, "Pocz¹tek ruchu." );
+
+        vector<double> zero {0};
+        XY_plot.plot_xy( zero, zero, "Punkt zerowy." );
     }
 
     getchar();
