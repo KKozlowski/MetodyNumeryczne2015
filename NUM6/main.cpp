@@ -6,7 +6,6 @@
 #include "gnuplot_i.hpp"
 
 #define GNUPLOT_PATH "C:/gnuplot/bin"
-#define M_PI 3.1415926
 
 using namespace std;
 
@@ -24,20 +23,20 @@ double vy[table_size];
 
 //http://scicomp.stackexchange.com/questions/12854/simulate-motion-of-the-kepler-orbit-using-runge-kutta-4-method-in-c
 
-double func1(double y1, double y2, double y3, double y4){
+double func1(double y2){
     return y2;
 }
 
-double func2(double y1,double y2, double y3, double y4 ){
+double func2(double y1, double y3 ){
     double r = sqrt(y1*y1+y3*y3);
     return -G*M*y1/(r*r*r);
 }
 
-double func3(double y1, double y2,double y3, double y4 ){
+double func3(double y4 ){
     return y4;
 }
 
-double func4(double y1, double y2, double y3, double y4){
+double func4(double y1, double y3){
     double r = sqrt(y1*y1+y3*y3);
     return -G*M*y3/(r*r*r);
 }
@@ -45,25 +44,25 @@ double func4(double y1, double y2, double y3, double y4){
 void RungeKutta(double *y1, double *y2, double *y3, double *y4 ){
 
     for(int i=0; i<table_size-1; i++){
-        double k11=h*func1(y1[i],y2[i], y3[i],  y4[i]);
-        double k21=h*func2(y1[i],y2[i], y3[i],  y4[i]);
-        double k31=h*func3(y1[i],y2[i], y3[i],  y4[i]);
-        double k41=h*func4(y1[i],y2[i], y3[i],  y4[i]);
+        double k11=h*func1(y2[i]);
+        double k21=h*func2(y1[i], y3[i]);
+        double k31=h*func3(y4[i]);
+        double k41=h*func4(y1[i], y3[i]);
 
-        double k12=h*func1(0.5*k11+y1[i], 0.5*k21+y2[i], 0.5*k31+y3[i], 0.5*k41+y4[i]);
-        double k22=h*func2(0.5*k11+y1[i], 0.5*k21+y2[i], 0.5*k31+y3[i], 0.5*k41+y4[i]);
-        double k32=h*func3(0.5*k11+y1[i], 0.5*k21+y2[i], 0.5*k31+y3[i], 0.5*k41+y4[i]);
-        double k42=h*func4(0.5*k11+y1[i], 0.5*k21+y2[i], 0.5*k31+y3[i], 0.5*k41+y4[i]);
+        double k12=h*func1(0.5*k21+y2[i]);
+        double k22=h*func2(0.5*k11+y1[i], 0.5*k31+y3[i]);
+        double k32=h*func3( 0.5*k41+y4[i]);
+        double k42=h*func4(0.5*k11+y1[i], 0.5*k31+y3[i]);
 
-        double k13=h*func1(0.5*k12+y1[i], 0.5*k22+y2[i], 0.5*k32+y3[i], 0.5*k42+y4[i]);
-        double k23=h*func2(0.5*k12+y1[i], 0.5*k22+y2[i], 0.5*k32+y3[i], 0.5*k42+y4[i]);
-        double k33=h*func3(0.5*k12+y1[i], 0.5*k22+y2[i], 0.5*k32+y3[i], 0.5*k42+y4[i]);
-        double k43=h*func4(0.5*k12+y1[i], 0.5*k22+y2[i], 0.5*k32+y3[i], 0.5*k42+y4[i]);
+        double k13=h*func1(0.5*k22+y2[i]);
+        double k23=h*func2(0.5*k12+y1[i], 0.5*k32+y3[i]);
+        double k33=h*func3(0.5*k42+y4[i]);
+        double k43=h*func4(0.5*k12+y1[i], 0.5*k32+y3[i]);
 
-        double k14=h*func1(k13+y1[i], k23+y2[i], k33+y3[i], k43+y4[i]);
-        double k24=h*func2(k13+y1[i], k23+y2[i], k33+y3[i], k43+y4[i]);
-        double k34=h*func3(k13+y1[i], k23+y2[i], k33+y3[i], k43+y4[i]);
-        double k44=h*func4(k13+y1[i], k23+y2[i], k33+y3[i], k43+y4[i]);
+        double k14=h*func1(k23+y2[i]);
+        double k24=h*func2(k13+y1[i], k33+y3[i]);
+        double k34=h*func3(k43+y4[i]);
+        double k44=h*func4(k13+y1[i], k33+y3[i]);
 
         y1[i+1] = y1[i] + (k11+2*k12+2*k13+k14)/6;
         y2[i+1] = y2[i] + (k21+2*k22+2*k23+k24)/6;
