@@ -13,15 +13,13 @@ double start, stop;
 
 double M = 5.974e24;
 double G = 6.67e-11;
-double h = 3; //wielkosc kroku calkowania
+double h = 1; //wielkosc kroku calkowania
 const int table_size = 30000;
 
 double x[table_size];
 double y[table_size];
 double vx[table_size];
 double vy[table_size];
-
-//http://scicomp.stackexchange.com/questions/12854/simulate-motion-of-the-kepler-orbit-using-runge-kutta-4-method-in-c
 
 double func1(double y2){
     return y2;
@@ -135,7 +133,7 @@ int main()
     Gnuplot Vy_plot;
     Gnuplot XY_plot;
 
-    {
+    /*{
         X_plot.set_title( "X" );
         X_plot.set_xlabel( "X" );
         X_plot.set_ylabel( "Y" );
@@ -173,7 +171,7 @@ int main()
         }
 
         Y_plot.plot_xy( poz, pion, "Wykres funkcji." );
-    }
+    }*/
 
     {
         Vx_plot.set_title( "Vx" );
