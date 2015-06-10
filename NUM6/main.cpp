@@ -49,7 +49,7 @@ void RungeKutta(double *y1, double *y2, double *y3, double *y4 ){
 
         double k12=h*func1(0.5*k21+y2[i]);
         double k22=h*func2(0.5*k11+y1[i], 0.5*k31+y3[i]);
-        double k32=h*func3( 0.5*k41+y4[i]);
+        double k32=h*func3(0.5*k41+y4[i]);
         double k42=h*func4(0.5*k11+y1[i], 0.5*k31+y3[i]);
 
         double k13=h*func1(0.5*k22+y2[i]);
