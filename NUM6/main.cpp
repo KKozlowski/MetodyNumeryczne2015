@@ -14,7 +14,7 @@ double start, stop;
 double M = 5.974e24;
 double G = 6.67e-11;
 double h = 1; //wielkosc kroku calkowania
-const int table_size = 30000;
+const int table_size = 21500;
 
 double x[table_size];
 double y[table_size];
@@ -89,7 +89,7 @@ double max(double *tab){
 }
 
 void wybierzFunk(){
-    cout << "Wybierz przypadek [1-3]: \n> ";
+    cout << "Wybierz przypadek [1-4]: \n> ";
     int wybor;
 
     cin >> wybor;
@@ -105,6 +105,10 @@ void wybierzFunk(){
         break;
     case 3:
         vy[0] = 11200;
+        break;
+    case 4:
+        x[0] = 42e6;
+        vy[0] = 3000;
         break;
     default:
         throw string("Example not found");
